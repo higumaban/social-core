@@ -16,6 +16,7 @@ class TwitterOAuth(BaseOAuth1):
     REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token'
     ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token'
     REDIRECT_STATE = True
+    FIRST_NAME_LENGTH = 16
 
     def process_error(self, data):
         if 'denied' in data:
@@ -29,7 +30,7 @@ class TwitterOAuth(BaseOAuth1):
         return {'username': response['screen_name'],
                 'email': response.get('email', ''),
                 'fullname': fullname,
-                'first_name': first_name,
+                'first_name': first_name[0:self.FIRST_NAME_LENGTH] if len(first_name) > self.FIRST_NAME_LENGTH else first_name,
                 'last_name': last_name}
 
     def user_data(self, access_token, *args, **kwargs):
